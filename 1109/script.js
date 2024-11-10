@@ -2,7 +2,11 @@ import { WebGLUtility, ShaderProgram } from '../lib/webgl.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
   const app = new WebGLApp();
+  // イベントリスナーを登録
   window.addEventListener("resize", app.resize, false);
+  window.addEventListener("pointermove", (e) => app.setPointerPos(e), false);
+
+  // appを初期化して描画
   app.init("webgl");
   await app.load()
   app.setup();
@@ -17,6 +21,8 @@ class WebGLApp {
 
     this.resize = this.resize.bind(this);
     this.render = this.render.bind(this);
+    // uniform
+    this.uMouse = [0.0, 0.0];
   }
 
   /**
@@ -33,6 +39,12 @@ class WebGLApp {
       ],
       stride: [
         3,
+      ],
+      uniform: [
+        "mouse",
+      ],
+      type: [
+        "uniform2fv",
       ]
     })
   }
@@ -44,7 +56,7 @@ class WebGLApp {
     this.setupGeometry();
     this.resize();
     this.gl.clearColor(0.2, 0.2, 0.2, 1.0);
-    this.running = false;
+    this.running = true;
   }
 
   /**
@@ -83,9 +95,10 @@ class WebGLApp {
     // プログラムオブジェクトの設定
     this.ShaderProgram.use();
     this.ShaderProgram.setAttribute(this.vbo);
+    this.ShaderProgram.setUniform([this.uMouse]);
 
     // 描画
-    gl.drawArrays(gl.POINTS, 0, this.position.length / 3)
+    gl.drawArrays(gl.POINTS, 0, this.position.length / 3);
   }
 
   /**
@@ -113,6 +126,18 @@ class WebGLApp {
     if (this.gl == null) {
       throw new Error('webgl not supported');
     }
+  }
+
+  /**
+   * pointerEventを受け取ってuniformにセットする
+   * @param {PointerEvent} pointerEvent
+   */
+  setPointerPos(pointerEvent) {
+    console.log("setPointerpos", pointerEvent)
+    const x = normalize(pointerEvent.pageX, {min: 0, max: window.innerWidth});
+    const y = normalize(pointerEvent.pageY, {min: 0, max: window.innerHeight});
+    this.uMouse[0] = x;
+    this.uMouse[1] = -y;
   }
 }
 
