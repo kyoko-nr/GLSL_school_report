@@ -1,4 +1,5 @@
 import { WebGLUtility, ShaderProgram } from '../lib/webgl.js';
+import { normalize } from '../utils/normalize.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
   const app = new WebGLApp();
@@ -34,18 +35,10 @@ class WebGLApp {
     this.ShaderProgram = new ShaderProgram(this.gl, {
       vertexShaderSource: vs,
       fragmentShaderSource: fs,
-      attribute: [
-        "position",
-      ],
-      stride: [
-        3,
-      ],
-      uniform: [
-        "mouse",
-      ],
-      type: [
-        "uniform2fv",
-      ]
+      attribute: ["position"],
+      stride: [3],
+      uniform: ["mouse"],
+      type: ["uniform2fv"]
     })
   }
 
@@ -139,16 +132,4 @@ class WebGLApp {
     this.uMouse[0] = x;
     this.uMouse[1] = -y;
   }
-}
-
-/**
- * min ~ maxの範囲にあるvalを -1.0 ~ 1.0に正規化する
- * @param {number} val 正規化する値
- * @param {object} range 範囲
- * @property {number} min 最小値
- * @property {number} max 最大値
- */
-const normalize = (val, {min, max}) => {
-  const ratio = val / (max - min);
-  return ratio * 2.0 - 1.0;
 }
