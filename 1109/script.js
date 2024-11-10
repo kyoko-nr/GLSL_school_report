@@ -126,7 +126,6 @@ class WebGLApp {
    * @param {PointerEvent} pointerEvent
    */
   setPointerPos(pointerEvent) {
-    console.log("setPointerpos", pointerEvent)
     const x = normalize(pointerEvent.pageX, {min: 0, max: window.innerWidth});
     const y = normalize(pointerEvent.pageY, {min: 0, max: window.innerHeight});
     this.uMouse[0] = x;
