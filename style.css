@@ -33,6 +33,8 @@ a {
   & > li {
     position: relative;
     margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
 
     &::before {
       content: "";
