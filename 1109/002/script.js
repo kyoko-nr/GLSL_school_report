@@ -22,9 +22,11 @@ class WebGLApp {
 
     this.resize = this.resize.bind(this);
     this.render = this.render.bind(this);
+    this.startTime = 0;
     // uniform
     this.uMouse = [Infinity, Infinity];
     this.uTime = 1.0;
+    this.index = 0;
   }
 
   /**
@@ -38,8 +40,8 @@ class WebGLApp {
       fragmentShaderSource: fs,
       attribute: ["position"],
       stride: [3],
-      uniform: ["mouse", "time"],
-      type: ["uniform2fv", "uniform1f"]
+      uniform: ["mouse", "time", "index"],
+      type: ["uniform2fv", "uniform1f", "uniform1f"]
     })
   }
 
@@ -51,6 +53,7 @@ class WebGLApp {
     this.resize();
     this.gl.clearColor(0.2, 0.2, 0.2, 1.0);
     this.running = true;
+    this.startTime = Date.now();
   }
 
   /**
@@ -86,14 +89,15 @@ class WebGLApp {
     gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // 🍎 jsではなくシェーダーでsin()を使いたい
-    this.uTime = Math.sin(Date.now() * 0.001) * 0.5 + 1;
-    // this.uTime = Date.now() * 0.001;
+    // 大きい数値だとGLSL側で処理できないのでstartTimeを引いて小さくする
+    this.uTime = Date.now() - this.startTime;
+    // 0〜3までの値をindexとして渡す
+    this.index = (Math.floor(this.uTime / 3600)) % 4;
 
     // プログラムオブジェクトの設定
     this.ShaderProgram.use();
     this.ShaderProgram.setAttribute(this.vbo);
-    this.ShaderProgram.setUniform([this.uMouse, this.uTime]);
+    this.ShaderProgram.setUniform([this.uMouse, this.uTime, this.index]);
 
     // 描画
     gl.drawArrays(gl.POINTS, 0, this.position.length / 3);
