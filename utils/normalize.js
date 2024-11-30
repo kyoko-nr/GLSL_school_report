@@ -6,6 +6,6 @@
  * @property {number} max 最大値
  */
 export const normalize = (val, {min, max}) => {
-  const ratio = val / (max - min);
+  const ratio = (val - min) / (max - min);
   return ratio * 2.0 - 1.0;
 }
