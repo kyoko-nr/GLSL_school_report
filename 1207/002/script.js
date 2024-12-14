@@ -57,7 +57,7 @@ class WebGLApp {
     });
     pane.addBlade({
       view: 'slider',
-      label: 'param',
+      label: 'color',
       min: 0.0,
       max: 1.0,
       value: this.uParam,

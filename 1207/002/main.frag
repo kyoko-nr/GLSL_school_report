@@ -49,9 +49,14 @@ void main() {
   float aspect = resolution.x / resolution.y;
   vec2 correctedCoord = vec2(signedCoord.x * aspect, signedCoord.y);
 
-  vec3 color = vec3(0.0);
+  float r =  (sin(param * 2.0) + 1.0) * 0.5;
+  float g =  (cos(param * 2.0) + 1.0) * 0.5;
+  float b =  (sin(param * 2.0 + 5.0) + 1.0) * 0.5;
+  vec3 baseColor = vec3(r, g, b);
+
+  vec3 nikoColor = vec3(0.0);
   for(int i = 0; i < 5; ++i) {
-    // 時間をずらしてニコちゃんの位置をずらす
+    // 時間によって位置をずらす
     float offset = 0.2 * float(i);
     float x = sin( (-time + offset) * 2.0) * 0.5;
     float y = cos(-time + offset) * 0.5;
@@ -59,10 +64,10 @@ void main() {
     // ニコちゃんを計算
     float niko = nikochan(movedCoord);
     // 色をずらす
-    vec3 yellow = vec3(1.0 - offset, 0.8 - offset, 0.0);
+    vec3 color = vec3(baseColor.r - offset, baseColor.g - offset, baseColor.b);
     // 色を加算
-    color += yellow * niko;
+    nikoColor += color * niko;
   }
 
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(nikoColor, 1.0);
 }
