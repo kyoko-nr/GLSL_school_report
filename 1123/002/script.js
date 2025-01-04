@@ -133,7 +133,7 @@ class WebGLApp {
     if (this.running === true) {
       requestAnimationFrame(this.render);
     }
-    if(this.uTime > 1.2) {
+    if(this.uTime > 1.0) {
       // 1秒経ったらstopする
       this.stop();
     }
@@ -143,6 +143,7 @@ class WebGLApp {
     const time = (now - this.previousTime) / 1000;
     this.uTime += time;
     this.previousTime = now;
+    // console.log("this.uTime", this.uTime);
 
     // ビューポートの設定と背景色・深度値のクリア
     gl.viewport(0, 0, this.canvas.width, this.canvas.height);
